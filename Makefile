@@ -4,3 +4,6 @@ LIBS := -lglfw3 -lm -I.
 
 build:
 	$(CXX) $(FLAGS) Main.cpp $(LIBS)
+
+clean:
+	rm a.out
