@@ -1,5 +1,5 @@
 // Includes math library
-#include <cmath>
+#include <math.h>
 
 // Includes and defined GLAD implementatioin
 #define GLAD_GL_IMPLEMENTATION
@@ -41,9 +41,9 @@ typedef struct AppState {
 
 // Triangle's vertices
 static const GLfloat vertices[] = {
-	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f // Upper corner
+	-0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower left corner
+	0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower right corner
+	0.0f, 0.5f * (float)sqrt(3) * 2 / 3, 0.0f // Upper corner
 };
 
 int main() {
@@ -60,7 +60,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Creates a window with glfw3
-	app.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL 4.6", nullptr, nullptr);
+	app.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL 4.6", NULL, NULL);
 	if (!app.window) goto terminate;
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
 
