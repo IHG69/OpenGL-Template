@@ -36,7 +36,7 @@ typedef struct AppState {
 	GLuint VBO, VAO;
 } AppState;
 
-#define SCREEN_WIDTH 800
+#define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 600
 
 // Triangle's vertices
@@ -100,31 +100,43 @@ int main() {
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
+	
+	// We unbind the VAO and VBO to prevent making changes to them
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	// We set OpenGL viewport size to be the same as
+	// out window's size
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	while (!glfwWindowShouldClose(app.window)) {
+		// We loop until the window wants to close
+		
+		// Clears the background with a bluish color
+		// and clears any old graphic
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// We start our shader program and render some triangle
 		glUseProgram(app.shaders.programID);
 		glBindVertexArray(app.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		// GLFW updates the buffers and polls other events
 		glfwSwapBuffers(app.window);
 		glfwPollEvents();
 	}
 
 exit:
+	// Destroys the VAO and VBO alongside the program shader
 	glDeleteVertexArrays(1, &app.VAO);
 	glDeleteBuffers(1, &app.VBO);
 	glDeleteProgram(app.shaders.programID);
 
+	// Destroys the window
 	glfwDestroyWindow(app.window);
 
 terminate:
+	// Quits GLFW and cleans this up
 	glfwTerminate();
 	return 0;
 }
