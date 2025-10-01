@@ -108,9 +108,15 @@ int main() {
 	// We set OpenGL viewport size to be the same as
 	// out window's size
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	// We loop until the window wants to close
 	while (!glfwWindowShouldClose(app.window)) {
-		// We loop until the window wants to close
 		
+		// If the user presses 'Q' we close the window
+		if (glfwGetKey(app.window, GLFW_KEY_Q) == GLFW_PRESS) {
+			goto exit;
+		}
+
 		// Clears the background with a bluish color
 		// and clears any old graphic
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
