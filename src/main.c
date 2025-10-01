@@ -65,7 +65,7 @@ int main() {
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
 
 	// Tell GLAD to load OpenGL
-	gladLoadGL(glfwGetProcAddress);
+	gladLoadGL((GLADloadfunc)glfwGetProcAddress);
 
 	// Creates a vertex shader and compiles
 	app.shaders.vertex = glCreateShader(GL_VERTEX_SHADER);
