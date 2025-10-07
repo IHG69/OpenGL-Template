@@ -39,12 +39,20 @@ typedef struct AppState {
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 600
 
+#define UNUSED(obj) ((void)obj) // Marks an object as unused
+
 // Triangle's vertices
 static const GLfloat vertices[] = {
 	-0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower left corner
 	0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower right corner
 	0.0f, 0.5f * (float)sqrt(3) * 2 / 3, 0.0f // Upper corner
 };
+
+// Callback for resizing the window
+static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+	UNUSED(window);
+	glViewport(0, 0, width, height); // Updates OpenGL viewport
+}
 
 int main() {
 	// Initializes the program state and glfw3
@@ -63,6 +71,10 @@ int main() {
 	app.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL 4.6", NULL, NULL);
 	if (!app.window) goto terminate;
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
+	glfwSetFramebufferSizeCallback(app.window, framebuffer_size_callback); // Sets callback for window resizing
+	
+	// Hides the window, will show when everything else is set up
+	glfwHideWindow(app.window);
 
 	// Tell GLAD to load OpenGL
 	gladLoadGL((GLADloadfunc)glfwGetProcAddress);
@@ -109,9 +121,11 @@ int main() {
 	// out window's size
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// Show the window
+	glfwShowWindow(app.window);
+	
 	// We loop until the window wants to close
 	while (!glfwWindowShouldClose(app.window)) {
-		
 		// If the user presses 'Q' we close the window
 		if (glfwGetKey(app.window, GLFW_KEY_Q) == GLFW_PRESS) {
 			goto exit;
