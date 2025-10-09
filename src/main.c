@@ -36,8 +36,12 @@ typedef struct AppState {
 	GLuint VBO, VAO;
 } AppState;
 
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 600
+#define RESOLUTION 2
+#define SW 160*RESOLUTION
+#define SH 120*RESOLUTION
+#define PIXEL_SCALE 4/RESOLUTION
+#define GLSW (SW*PIXEL_SCALE)
+#define GLSH (SH*PIXEL_SCALE)
 
 #define UNUSED(obj) ((void)obj) // Marks an object as unused
 
@@ -68,7 +72,11 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Creates a window with glfw3
-	app.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL 4.6", NULL, NULL);
+	app.window = glfwCreateWindow(
+		SW, SH,
+		"OpenGL 4.6",
+		NULL, NULL
+	);
 	if (!app.window) goto terminate;
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
 	glfwSetFramebufferSizeCallback(app.window, framebuffer_size_callback); // Sets callback for window resizing
@@ -119,7 +127,7 @@ int main() {
 
 	// We set OpenGL viewport size to be the same as
 	// out window's size
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glViewport(0, 0, GLSW, GLSH);
 
 	// Show the window
 	glfwShowWindow(app.window);
