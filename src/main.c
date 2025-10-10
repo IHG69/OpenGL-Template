@@ -72,16 +72,12 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-#ifdef __APPLE__
+#ifdef __APPLE__ // Make OpenGL compatible in Apple (ig)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
 	// Creates a window with glfw3
-	app.window = glfwCreateWindow(
-		SW, SH,
-		"OpenGL 4.6",
-		NULL, NULL
-	);
+	app.window = glfwCreateWindow(SW, SH, "OpenGL 4.6", NULL, NULL);
 	if (!app.window) {
 		const char *buf; glfwGetError(&buf);
 		fprintf(stderr, "Couldn't create window: %s\n", buf);
