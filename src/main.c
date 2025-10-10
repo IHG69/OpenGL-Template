@@ -60,6 +60,8 @@ int main() {
 	// Initializes the program state and glfw3
 	AppState app = {0};
 	if (!glfwInit()) {
+		const char *buf; glfwGetError(&buf);
+		fprintf(stderr, "Couldn't initialize GLFW: %s\n", buf);
 		return 1;
 	}
 
