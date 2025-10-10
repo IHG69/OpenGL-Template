@@ -1,5 +1,6 @@
-// Includes math library
+// Includes math library and IO library
 #include <math.h>
+#include <stdio.h>
 
 // Includes and defined GLAD implementatioin
 #define GLAD_GL_IMPLEMENTATION
@@ -36,7 +37,7 @@ typedef struct AppState {
 	GLuint VBO, VAO;
 } AppState;
 
-#define RESOLUTION 2
+#define RESOLUTION 4
 #define SW 160*RESOLUTION
 #define SH 120*RESOLUTION
 #define PIXEL_SCALE 4/RESOLUTION
@@ -45,19 +46,16 @@ typedef struct AppState {
 
 #define UNUSED(obj) ((void)obj) // Marks an object as unused
 
-// Triangle's vertices
 static const GLfloat vertices[] = {
-	-0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower left corner
-	0.5f, -0.5f * (float)sqrt(3) / 3, 0.0f, // Lower right corner
-	0.0f, 0.5f * (float)sqrt(3) * 2 / 3, 0.0f // Upper corner
+	// first triangle
+	-0.9f, -0.5f, 0.0f,  // left 
+    -0.0f, -0.5f, 0.0f,  // right
+    -0.45f, 0.5f, 0.0f,  // top 
+    // second triangle
+	0.0f, -0.5f, 0.0f,  // left
+	0.9f, -0.5f, 0.0f,  // right
+	0.45f, 0.5f, 0.0f   // top
 };
-
-// Callback for resizing the window
-static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-	UNUSED(window);
-	glViewport(0, 0, width, height); // Updates OpenGL viewport
-}
-
 int main() {
 	// Initializes the program state and glfw3
 	AppState app = {0};
@@ -70,6 +68,11 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
 	// Creates a window with glfw3
 	app.window = glfwCreateWindow(
@@ -77,15 +80,21 @@ int main() {
 		"OpenGL 4.6",
 		NULL, NULL
 	);
-	if (!app.window) goto terminate;
+	if (!app.window) {
+		const char *buf; glfwGetError(&buf);
+		fprintf(stderr, "Couldn't create window: %s\n", buf);
+		goto terminate;
+	}
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
-	glfwSetFramebufferSizeCallback(app.window, framebuffer_size_callback); // Sets callback for window resizing
 	
 	// Hides the window, will show when everything else is set up
 	glfwHideWindow(app.window);
 
 	// Tell GLAD to load OpenGL
-	gladLoadGL((GLADloadfunc)glfwGetProcAddress);
+	if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)) {
+		fprintf(stderr, "Couldn't initialize GLAD\n");
+		goto terminate;
+	}
 
 	// Creates a vertex shader and compiles
 	app.shaders.vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -132,6 +141,7 @@ int main() {
 	// Show the window
 	glfwShowWindow(app.window);
 	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// We loop until the window wants to close
 	while (!glfwWindowShouldClose(app.window)) {
 		// If the user presses 'Q' we close the window
@@ -147,7 +157,7 @@ int main() {
 		// We start our shader program and render some triangle
 		glUseProgram(app.shaders.programID);
 		glBindVertexArray(app.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// GLFW updates the buffers and polls other events
 		glfwSwapBuffers(app.window);
