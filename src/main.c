@@ -61,9 +61,11 @@ int main() {
 	AppState app = {0};
 	if (!glfwInit()) {
 		const char *buf; glfwGetError(&buf);
-		fprintf(stderr, "Couldn't initialize GLFW: %s\n", buf);
+		fprintf(stderr, "[ERROR]: Couldn't initialize GLFW: %s\n", buf);
 		return 1;
 	}
+
+	fprintf(stdout, "[INFO]: Initialized GLFW successfully\n");
 
 	// Tells glfw3 to use OpenGL Core 4.6
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -80,19 +82,23 @@ int main() {
 	app.window = glfwCreateWindow(SW, SH, "OpenGL 4.6", NULL, NULL);
 	if (!app.window) {
 		const char *buf; glfwGetError(&buf);
-		fprintf(stderr, "Couldn't create window: %s\n", buf);
+		fprintf(stderr, "[ERROR]: Couldn't create window: %s\n", buf);
 		goto terminate;
 	}
 	glfwMakeContextCurrent(app.window); // Sets OpenGL context as current
+
+	fprintf(stdout, "[INFO]: Created window succesfully\n");
 	
 	// Hides the window, will show when everything else is set up
 	glfwHideWindow(app.window);
 
 	// Tell GLAD to load OpenGL
 	if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)) {
-		fprintf(stderr, "Couldn't initialize GLAD\n");
+		fprintf(stderr, "[ERROR]: Couldn't initialize GLAD\n");
 		goto terminate;
 	}
+
+	fprintf(stdout, "[INFO]: GLAD loaded OpenGL successfully\n");
 
 	// Creates a vertex shader and compiles
 	app.shaders.vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -114,6 +120,8 @@ int main() {
 	glDeleteShader(app.shaders.vertex);
 	glDeleteShader(app.shaders.fragment);
 
+	fprintf(stdout, "[INFO]: Compiled shaders, both fragment and vertex shader\n");
+
 	// Generates VAO and VBO buffers
 	glGenVertexArrays(1, &app.VAO);
 	glGenBuffers(1, &app.VBO);
@@ -132,6 +140,8 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	fprintf(stdout, "[INFO]: Created VAO and VBO\n");
+
 	// We set OpenGL viewport size to be the same as
 	// out window's size
 	glViewport(0, 0, GLSW, GLSH);
@@ -139,11 +149,12 @@ int main() {
 	// Show the window
 	glfwShowWindow(app.window);
 	
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// We loop until the window wants to close
 	while (!glfwWindowShouldClose(app.window)) {
 		// If the user presses 'Q' we close the window
 		if (glfwGetKey(app.window, GLFW_KEY_Q) == GLFW_PRESS) {
+			fprintf(stdout, "[INFO]: User requested quitting\n");
 			goto exit;
 		}
 
@@ -167,10 +178,11 @@ exit:
 	glDeleteVertexArrays(1, &app.VAO);
 	glDeleteBuffers(1, &app.VBO);
 	glDeleteProgram(app.shaders.programID);
+	fprintf(stdout, "[INFO]: Resources were cleaned\n");
 
 	// Destroys the window
 	glfwDestroyWindow(app.window);
-
+	fprintf(stdout, "[INFO]: Window destroyed successfully\n");
 terminate:
 	// Quits GLFW and cleans this up
 	glfwTerminate();

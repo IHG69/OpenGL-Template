@@ -3,6 +3,7 @@
 
 // Just prints a message when an error happens
 // Only if the functions doesn't need to assert/abort
+// Users have to handle the error value by themselves
 #ifdef ENABLE_ERROR_LOGGIN
 #endif // ENABLE_ERROR_LOGGIN
 
